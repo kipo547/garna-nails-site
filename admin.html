@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Адмінка | garna_nails</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fffafc;
+      color: #2d2d2f;
+      padding: 30px;
+    }
+
+    .admin {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border: 1px solid #ead6dd;
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 42px;
+      letter-spacing: -0.05em;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 15px;
+      border-radius: 16px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      margin-bottom: 14px;
+      font-family: inherit;
+    }
+
+    textarea {
+      min-height: 520px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    button {
+      background: #2d2d2f;
+      color: white;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .status {
+      font-weight: 700;
+      color: #d79aaa;
+      margin-top: 12px;
+    }
+
+    .hint {
+      color: #777;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="admin">
+    <h1>Адмінка garna_nails</h1>
+
+    <div id="loginBox">
+      <p class="hint">Введи пароль для входу в адмінку.</p>
+      <input type="password" id="password" placeholder="Пароль">
+      <button onclick="login()">Увійти</button>
+    </div>
+
+    <div id="editorBox" style="display:none;">
+      <p class="hint">
+        Тут можна редагувати контент сайту. Обережно: формат має залишатися JSON.
+        Фото змінюються через шлях, наприклад: assets/images/portfolio/work1.jpg
+      </p>
+
+      <textarea id="content"></textarea>
+
+      <button onclick="saveContent()">Зберегти зміни</button>
+      <p class="status" id="status"></p>
+    </div>
+  </div>
+
+  <script>
+    let adminPassword = "";
+
+    async function login() {
+      adminPassword = document.getElementById("password").value;
+
+      const res = await fetch("/admin-load", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": adminPassword
+        }
+      });
+
+      if (!res.ok) {
+        alert("Невірний пароль");
+        return;
+      }
+
+      const data = await res.json();
+
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("editorBox").style.display = "block";
+      document.getElementById("content").value = JSON.stringify(data, null, 2);
+    }
+
+    async function saveContent() {
+      const status = document.getElementById("status");
+
+      let parsed;
+
+      try {
+        parsed = JSON.parse(document.getElementById("content").value);
+      } catch (e) {
+        status.textContent = "Помилка: JSON написаний неправильно.";
+        return;
+      }
+
+      status.textContent = "Зберігаємо...";
+
+      const res = await fetch("/admin-save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": adminPassword
+        },
+        body: JSON.stringify(parsed)
+      });
+
+      if (res.ok) {
+        status.textContent = "Збережено. Тепер онови сайт.";
+      } else {
+        status.textContent = "Помилка збереження.";
+      }
+    }
+  </script>
+
+</body>
+</html>

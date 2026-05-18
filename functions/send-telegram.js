@@ -1,4 +1,10 @@
-export async function onRequestPost(context) {
+export async function onRequest(context) {
+  if (context.request.method !== "POST") {
+    return new Response("Method Not Allowed", {
+      status: 405,
+    });
+  }
+
   try {
     const data = await context.request.json();
 
@@ -52,6 +58,7 @@ ${data.message || "Без повідомлення"}
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
+
   } catch (error) {
     return new Response(JSON.stringify({ message: "Server error" }), {
       status: 500,

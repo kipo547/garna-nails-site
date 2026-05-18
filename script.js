@@ -1,5 +1,63 @@
 
 const langButtons = document.querySelectorAll(".lang button");
+async function loadAdminContent() {
+  try {
+    const res = await fetch("/data/admin-content.json");
+    const data = await res.json();
+
+    document.querySelector(".hero h1").innerHTML = data.name.replace(" ", "<br>");
+    document.querySelector(".nickname").textContent = data.nickname;
+    document.querySelector(".hero-text").textContent = data.description;
+
+    const serviceCards = document.querySelectorAll(".service-card");
+
+    data.services.forEach((service, index) => {
+      if (serviceCards[index]) {
+        serviceCards[index].querySelector("h3").textContent = service.title;
+        serviceCards[index].querySelector("p").textContent = service.text;
+      }
+    });
+
+    const portfolioGrid = document.querySelector(".portfolio-grid");
+
+    if (portfolioGrid && data.portfolio) {
+      portfolioGrid.innerHTML = "";
+
+      data.portfolio.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = `work-item ${item.size || ""}`;
+        div.dataset.category = item.category;
+
+        div.innerHTML = `<img src="${item.image}" alt="${item.title}">`;
+
+        portfolioGrid.appendChild(div);
+      });
+    }
+
+    const faqList = document.querySelector(".faq-list");
+
+    if (faqList && data.faq) {
+      faqList.innerHTML = "";
+
+      data.faq.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "faq-item";
+
+        div.innerHTML = `
+          <button>${item.question}<span>+</span></button>
+          <p>${item.answer}</p>
+        `;
+
+        faqList.appendChild(div);
+      });
+    }
+
+  } catch (error) {
+    console.log("Admin content not loaded");
+  }
+}
+
+loadAdminContent();
 
 const translations = {
   uk: {

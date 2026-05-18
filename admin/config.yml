@@ -43,7 +43,8 @@ collections:
             fields:
               - { label: "Питання", name: "question", widget: "string" }
               - { label: "Відповідь", name: "answer", widget: "text" }
-        - name: "portfolio"
+
+  - name: "portfolio"
     label: "Портфоліо"
     files:
       - file: "data/portfolio.json"
@@ -67,11 +68,11 @@ collections:
               - label: "Розмір блоку"
                 name: "size"
                 widget: "select"
+                required: false
                 options:
                   - { label: "Звичайний", value: "" }
                   - { label: "Високий", value: "tall" }
                   - { label: "Широкий", value: "wide" }
-                required: false
 
   - name: "settings"
     label: "Налаштування стилю"
@@ -82,4 +83,4 @@ collections:
         fields:
           - { label: "Основний рожевий колір", name: "pink", widget: "string", default: "#f6d6df" }
           - { label: "Світлий рожевий", name: "pink_light", widget: "string", default: "#fdeef3" }
-          - { label: "Темно-сірий", name: "gray", widget: "string", default: "#2d2d2f" }  
+          - { label: "Темно-сірий", name: "gray", widget: "string", default: "#2d2d2f" }

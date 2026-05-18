@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "title": "Робота 1",
+      "category": "product",
+      "image": "assets/images/portfolio/work1.jpg",
+      "size": "tall"
+    },
+    {
+      "title": "Робота 2",
+      "category": "product",
+      "image": "assets/images/portfolio/work2.jpg",
+      "size": ""
+    },
+    {
+      "title": "Робота 3",
+      "category": "product",
+      "image": "assets/images/portfolio/work3.jpg",
+      "size": "wide"
+    },
+    {
+      "title": "Робота 4",
+      "category": "hand",
+      "image": "assets/images/portfolio/work4.jpg",
+      "size": ""
+    },
+    {
+      "title": "Робота 5",
+      "category": "macro",
+      "image": "assets/images/portfolio/work5.jpg",
+      "size": ""
+    },
+    {
+      "title": "Робота 6",
+      "category": "macro",
+      "image": "assets/images/portfolio/work6.jpg",
+      "size": "tall"
+    }
+  ]
+}

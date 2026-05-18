@@ -1,0 +1,45 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/images/uploads"
+public_folder: "/assets/images/uploads"
+
+locale: "uk"
+
+collections:
+  - name: "content"
+    label: "Контент сайту"
+    files:
+      - file: "data/site.yml"
+        label: "Основна інформація"
+        name: "site"
+        fields:
+          - { label: "Ім’я", name: "name", widget: "string" }
+          - { label: "Нік", name: "nickname", widget: "string" }
+          - { label: "Опис", name: "description", widget: "text" }
+          - { label: "Instagram", name: "instagram", widget: "string" }
+          - { label: "TikTok", name: "tiktok", widget: "string" }
+          - { label: "Telegram", name: "telegram", widget: "string" }
+
+      - file: "data/services.yml"
+        label: "Послуги"
+        name: "services"
+        fields:
+          - label: "Список послуг"
+            name: "items"
+            widget: "list"
+            fields:
+              - { label: "Назва", name: "title", widget: "string" }
+              - { label: "Опис", name: "text", widget: "text" }
+
+      - file: "data/faq.yml"
+        label: "Питання"
+        name: "faq"
+        fields:
+          - label: "Питання"
+            name: "items"
+            widget: "list"
+            fields:
+              - { label: "Питання", name: "question", widget: "string" }
+              - { label: "Відповідь", name: "answer", widget: "text" }

@@ -4,66 +4,109 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Адмінка | garna_nails</title>
+
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #fffafc;
+      background: #fff7fa;
       color: #2d2d2f;
-      padding: 30px;
+      padding: 24px;
     }
 
     .admin {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
-      background: white;
-      border: 1px solid #ead6dd;
+      background: #fff;
+      border: 1px solid #f0d6df;
       border-radius: 28px;
-      padding: 30px;
+      padding: 28px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.06);
     }
 
     h1 {
-      margin-top: 0;
       font-size: 42px;
+      margin: 0 0 10px;
       letter-spacing: -0.05em;
     }
 
-    input, textarea, button {
+    h2 {
+      margin-top: 34px;
+      border-top: 1px solid #f0d6df;
+      padding-top: 24px;
+    }
+
+    input, textarea, select {
       width: 100%;
       box-sizing: border-box;
-      padding: 15px;
-      border-radius: 16px;
+      padding: 14px 16px;
       border: 1px solid #ddd;
-      font-size: 16px;
-      margin-bottom: 14px;
+      border-radius: 16px;
+      font-size: 15px;
+      margin: 7px 0 14px;
       font-family: inherit;
+      background: #fffafc;
     }
 
     textarea {
-      min-height: 520px;
-      font-family: monospace;
-      font-size: 14px;
+      min-height: 110px;
+      resize: vertical;
     }
 
     button {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
       background: #2d2d2f;
       color: white;
-      border: none;
       font-weight: 700;
       cursor: pointer;
+      margin: 6px 6px 6px 0;
     }
 
-    .status {
-      font-weight: 700;
-      color: #d79aaa;
-      margin-top: 12px;
+    .small-btn {
+      background: #d79aaa;
+    }
+
+    .danger {
+      background: #b84a62;
+    }
+
+    .card {
+      border: 1px solid #f0d6df;
+      background: #fffafc;
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 16px;
     }
 
     .hint {
       color: #777;
       line-height: 1.6;
-      margin-bottom: 24px;
+    }
+
+    .status {
+      font-weight: 700;
+      color: #d79aaa;
+      margin-top: 14px;
+    }
+
+    .topbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      position: sticky;
+      bottom: 16px;
+      background: rgba(255,255,255,0.9);
+      padding: 14px;
+      border: 1px solid #f0d6df;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    #editor {
+      display: none;
     }
   </style>
 </head>
@@ -71,27 +114,60 @@
 
   <div class="admin">
     <h1>Адмінка garna_nails</h1>
+    <p class="hint">Тут можна змінювати сайт без коду. Після збереження сайт оновиться через 30–60 секунд.</p>
 
-    <div id="loginBox">
-      <p class="hint">Введи пароль для входу в адмінку.</p>
-      <input type="password" id="password" placeholder="Пароль">
+    <div id="login">
+      <input type="password" id="password" placeholder="Пароль від адмінки">
       <button onclick="login()">Увійти</button>
     </div>
 
-    <div id="editorBox" style="display:none;">
+    <div id="editor">
+      <h2>Основна інформація</h2>
+
+      <label>Ім’я</label>
+      <input id="name">
+
+      <label>Нік</label>
+      <input id="nickname">
+
+      <label>Опис</label>
+      <textarea id="description"></textarea>
+
+      <label>Instagram</label>
+      <input id="instagram">
+
+      <label>TikTok</label>
+      <input id="tiktok">
+
+      <label>Telegram</label>
+      <input id="telegram">
+
+      <h2>Послуги</h2>
+      <div id="services"></div>
+      <button class="small-btn" onclick="addService()">+ Додати послугу</button>
+
+      <h2>Портфоліо</h2>
       <p class="hint">
-        Тут можна редагувати контент сайту. Обережно: формат має залишатися JSON.
-        Фото змінюються через шлях, наприклад: assets/images/portfolio/work1.jpg
+        Фото потрібно спочатку додати в GitHub у папку <b>assets/images/portfolio</b>, а тут вказати шлях,
+        наприклад: <b>assets/images/portfolio/work1.jpg</b>
       </p>
+      <div id="portfolio"></div>
+      <button class="small-btn" onclick="addPortfolio()">+ Додати роботу</button>
 
-      <textarea id="content"></textarea>
+      <h2>Питання / FAQ</h2>
+      <div id="faq"></div>
+      <button class="small-btn" onclick="addFaq()">+ Додати питання</button>
 
-      <button onclick="saveContent()">Зберегти зміни</button>
-      <p class="status" id="status"></p>
+      <div class="topbar">
+        <button onclick="saveContent()">Зберегти зміни</button>
+        <button class="small-btn" onclick="location.href='/'">Відкрити сайт</button>
+        <p class="status" id="status"></p>
+      </div>
     </div>
   </div>
 
   <script>
+    let data = {};
     let adminPassword = "";
 
     async function login() {
@@ -106,29 +182,157 @@
       });
 
       if (!res.ok) {
-        alert("Невірний пароль");
+        alert("Невірний пароль або не налаштована змінна ADMIN_PASSWORD");
         return;
       }
 
-      const data = await res.json();
+      data = await res.json();
 
-      document.getElementById("loginBox").style.display = "none";
-      document.getElementById("editorBox").style.display = "block";
-      document.getElementById("content").value = JSON.stringify(data, null, 2);
+      document.getElementById("login").style.display = "none";
+      document.getElementById("editor").style.display = "block";
+
+      render();
+    }
+
+    function render() {
+      document.getElementById("name").value = data.name || "";
+      document.getElementById("nickname").value = data.nickname || "";
+      document.getElementById("description").value = data.description || "";
+      document.getElementById("instagram").value = data.instagram || "";
+      document.getElementById("tiktok").value = data.tiktok || "";
+      document.getElementById("telegram").value = data.telegram || "";
+
+      renderServices();
+      renderPortfolio();
+      renderFaq();
+    }
+
+    function collectBase() {
+      data.name = document.getElementById("name").value;
+      data.nickname = document.getElementById("nickname").value;
+      data.description = document.getElementById("description").value;
+      data.instagram = document.getElementById("instagram").value;
+      data.tiktok = document.getElementById("tiktok").value;
+      data.telegram = document.getElementById("telegram").value;
+    }
+
+    function renderServices() {
+      const box = document.getElementById("services");
+      box.innerHTML = "";
+
+      data.services = data.services || [];
+
+      data.services.forEach((item, index) => {
+        box.innerHTML += `
+          <div class="card">
+            <label>Назва послуги</label>
+            <input value="${escapeHtml(item.title || "")}" onchange="data.services[${index}].title = this.value">
+
+            <label>Опис</label>
+            <textarea onchange="data.services[${index}].text = this.value">${escapeHtml(item.text || "")}</textarea>
+
+            <button class="danger" onclick="removeService(${index})">Видалити</button>
+          </div>
+        `;
+      });
+    }
+
+    function addService() {
+      data.services.push({ title: "Нова послуга", text: "Опис послуги" });
+      renderServices();
+    }
+
+    function removeService(index) {
+      data.services.splice(index, 1);
+      renderServices();
+    }
+
+    function renderPortfolio() {
+      const box = document.getElementById("portfolio");
+      box.innerHTML = "";
+
+      data.portfolio = data.portfolio || [];
+
+      data.portfolio.forEach((item, index) => {
+        box.innerHTML += `
+          <div class="card">
+            <label>Назва роботи</label>
+            <input value="${escapeHtml(item.title || "")}" onchange="data.portfolio[${index}].title = this.value">
+
+            <label>Категорія</label>
+            <select onchange="data.portfolio[${index}].category = this.value">
+              <option value="product" ${item.category === "product" ? "selected" : ""}>Предметні фото</option>
+              <option value="hand" ${item.category === "hand" ? "selected" : ""}>Фото на руці</option>
+              <option value="macro" ${item.category === "macro" ? "selected" : ""}>Макро текстури</option>
+              <option value="video" ${item.category === "video" ? "selected" : ""}>Відео контент</option>
+            </select>
+
+            <label>Шлях до фото</label>
+            <input value="${escapeHtml(item.image || "")}" onchange="data.portfolio[${index}].image = this.value">
+
+            <label>Розмір блоку</label>
+            <select onchange="data.portfolio[${index}].size = this.value">
+              <option value="" ${!item.size ? "selected" : ""}>Звичайний</option>
+              <option value="tall" ${item.size === "tall" ? "selected" : ""}>Високий</option>
+              <option value="wide" ${item.size === "wide" ? "selected" : ""}>Широкий</option>
+            </select>
+
+            <button class="danger" onclick="removePortfolio(${index})">Видалити</button>
+          </div>
+        `;
+      });
+    }
+
+    function addPortfolio() {
+      data.portfolio.push({
+        title: "Нова робота",
+        category: "product",
+        image: "assets/images/portfolio/work-new.jpg",
+        size: ""
+      });
+      renderPortfolio();
+    }
+
+    function removePortfolio(index) {
+      data.portfolio.splice(index, 1);
+      renderPortfolio();
+    }
+
+    function renderFaq() {
+      const box = document.getElementById("faq");
+      box.innerHTML = "";
+
+      data.faq = data.faq || [];
+
+      data.faq.forEach((item, index) => {
+        box.innerHTML += `
+          <div class="card">
+            <label>Питання</label>
+            <input value="${escapeHtml(item.question || "")}" onchange="data.faq[${index}].question = this.value">
+
+            <label>Відповідь</label>
+            <textarea onchange="data.faq[${index}].answer = this.value">${escapeHtml(item.answer || "")}</textarea>
+
+            <button class="danger" onclick="removeFaq(${index})">Видалити</button>
+          </div>
+        `;
+      });
+    }
+
+    function addFaq() {
+      data.faq.push({ question: "Нове питання", answer: "Відповідь" });
+      renderFaq();
+    }
+
+    function removeFaq(index) {
+      data.faq.splice(index, 1);
+      renderFaq();
     }
 
     async function saveContent() {
+      collectBase();
+
       const status = document.getElementById("status");
-
-      let parsed;
-
-      try {
-        parsed = JSON.parse(document.getElementById("content").value);
-      } catch (e) {
-        status.textContent = "Помилка: JSON написаний неправильно.";
-        return;
-      }
-
       status.textContent = "Зберігаємо...";
 
       const res = await fetch("/admin-save", {
@@ -137,14 +341,22 @@
           "Content-Type": "application/json",
           "x-admin-password": adminPassword
         },
-        body: JSON.stringify(parsed)
+        body: JSON.stringify(data)
       });
 
       if (res.ok) {
-        status.textContent = "Збережено. Тепер онови сайт.";
+        status.textContent = "Збережено. Сайт оновиться через 30–60 секунд.";
       } else {
-        status.textContent = "Помилка збереження.";
+        status.textContent = "Помилка збереження. Перевір GITHUB_TOKEN.";
       }
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
     }
   </script>
 

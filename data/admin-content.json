@@ -51,13 +51,13 @@
     {
       "title": "Робота 6",
       "category": "product",
-      "image": "assets/images/portfolio/work6.jpg",
+      "image": "assets/images/portfolio/work6.webp",
       "size": ""
     },
     {
       "title": "Робота 7",
       "category": "product",
-      "image": "assets/images/portfolio/work7.jpg",
+      "image": "assets/images/portfolio/work7.webp",
       "size": ""
     },
     {
@@ -69,7 +69,25 @@
     {
       "title": "Робота 9",
       "category": "product",
-      "image": "assets/images/portfolio/work9.jpg",
+      "image": "assets/images/portfolio/work9.webp",
+      "size": ""
+    },
+    {
+      "title": "Робота 10",
+      "category": "product",
+      "image": "assets/images/portfolio/work10.webp",
+      "size": ""
+    },
+    {
+      "title": "Робота 11",
+      "category": "product",
+      "image": "assets/images/portfolio/work11.jpg",
+      "size": ""
+    },
+    {
+      "title": "Робота 12",
+      "category": "product",
+      "image": "assets/images/portfolio/work12.jpg",
       "size": ""
     }
   ],

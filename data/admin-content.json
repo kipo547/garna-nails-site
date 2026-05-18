@@ -35,6 +35,12 @@
       "category": "product",
       "image": "assets/images/portfolio/work2.jpg",
       "size": ""
+    },
+    {
+      "title": "Робота 3",
+      "category": "product",
+      "image": "assets/images/portfolio/work3.jpg",
+      "size": ""
     }
   ],
   "faq": [

@@ -267,8 +267,12 @@
               <option value="video" ${item.category === "video" ? "selected" : ""}>Відео контент</option>
             </select>
 
-            <label>Шлях до фото</label>
+            <label>Фото</label>
             <input value="${escapeHtml(item.image || "")}" onchange="data.portfolio[${index}].image = this.value">
+
+            <input type="file" accept="image/*" onchange="uploadImage(event, ${index})">
+
+            ${item.image ? `<img src="/${item.image}" style="max-width:180px;border-radius:16px;margin:10px 0;display:block;">` : ""}
 
             <label>Розмір блоку</label>
             <select onchange="data.portfolio[${index}].size = this.value">
@@ -328,6 +332,37 @@
       data.faq.splice(index, 1);
       renderFaq();
     }
+    async function uploadImage(event, index) {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const status = document.getElementById("status");
+  status.textContent = "Завантажуємо фото...";
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch("/admin-upload", {
+    method: "POST",
+    headers: {
+      "x-admin-password": adminPassword
+    },
+    body: formData
+  });
+
+  if (!res.ok) {
+    status.textContent = "Помилка завантаження фото.";
+    return;
+  }
+
+  const result = await res.json();
+
+  data.portfolio[index].image = result.path;
+
+  status.textContent = "Фото завантажено. Натисни «Зберегти зміни».";
+  renderPortfolio();
+}
 
     async function saveContent() {
       collectBase();

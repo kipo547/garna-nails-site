@@ -273,7 +273,7 @@ requestForm.addEventListener("submit", async (event) => {
   };
 
   try {
-    const response = await fetch("send-telegram", {
+    const response = await fetch("/send-telegram", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

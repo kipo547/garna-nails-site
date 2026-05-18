@@ -50,6 +50,7 @@ async function loadAdminContent() {
 
         faqList.appendChild(div);
       });
+      initFaq();
     }
 
   } catch (error) {
@@ -277,15 +278,21 @@ lightbox.addEventListener("click", () => {
 });
 
 // FAQ / вопросы
-const faqItems = document.querySelectorAll(".faq-item");
+function initFaq() {
+  const faqItems = document.querySelectorAll(".faq-item");
 
-faqItems.forEach((item) => {
-  const button = item.querySelector("button");
+  faqItems.forEach((item) => {
+    const button = item.querySelector("button");
 
-  button.addEventListener("click", () => {
-    item.classList.toggle("active");
+    if (!button) return;
+
+    button.onclick = () => {
+      item.classList.toggle("active");
+    };
   });
-});
+}
+
+initFaq();
 
 // Плавное появление блоков при скролле
 const animatedElements = document.querySelectorAll(

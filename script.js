@@ -394,7 +394,9 @@ requestForm.addEventListener("submit", async (event) => {
       targetButton.click();
     }
   }, 500);
-    function makeServicesClickable() {
+   
+}
+  function makeServicesClickable() {
   const serviceCards = document.querySelectorAll(".service-card");
 
   const defaultCategories = ["product", "product", "video", "contact"];
@@ -427,6 +429,5 @@ requestForm.addEventListener("submit", async (event) => {
 }
 
 setTimeout(makeServicesClickable, 1000);
-}
 });
 

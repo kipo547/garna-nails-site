@@ -798,3 +798,23 @@ img {
   font-size: 17px;
   margin-bottom: 28px;
 }
+.service-card {
+  cursor: pointer;
+}
+
+.service-card::after {
+  content: "дивитися роботи →";
+  display: inline-block;
+  margin-top: 24px;
+  color: var(--pink-dark);
+  font-weight: 800;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: 0.25s ease;
+}
+
+.service-card:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}

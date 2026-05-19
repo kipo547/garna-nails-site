@@ -2,7 +2,7 @@ export async function onRequestPost(context) {
   const password = context.request.headers.get("x-admin-password");
 
   if (password !== context.env.ADMIN_PASSWORD) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response("Unauthorized: wrong admin password", { status: 401 });
   }
 
   try {
@@ -10,18 +10,27 @@ export async function onRequestPost(context) {
     const file = formData.get("file");
 
     if (!file) {
-      return new Response("No file", { status: 400 });
+      return new Response("No file uploaded", { status: 400 });
     }
 
     const repo = context.env.GITHUB_REPO;
     const branch = context.env.GITHUB_BRANCH || "main";
     const token = context.env.GITHUB_TOKEN;
 
-    if (!repo || !token) {
-      return new Response("GitHub settings missing", { status: 500 });
+    if (!repo) {
+      return new Response("Missing GITHUB_REPO", { status: 500 });
     }
 
-    const fileName = `${Date.now()}-${file.name}`.replaceAll(" ", "-");
+    if (!token) {
+      return new Response("Missing GITHUB_TOKEN", { status: 500 });
+    }
+
+    const safeName = file.name
+      .toLowerCase()
+      .replaceAll(" ", "-")
+      .replace(/[^a-z0-9._-]/g, "");
+
+    const fileName = `${Date.now()}-${safeName}`;
     const filePath = `assets/images/uploads/${fileName}`;
 
     const arrayBuffer = await file.arrayBuffer();
@@ -37,8 +46,8 @@ export async function onRequestPost(context) {
     const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
       method: "PUT",
       headers: {
-        "Authorization": `Bearer ${token}`,
-        "Accept": "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
         "Content-Type": "application/json",
         "User-Agent": "garna-nails-admin"
       },
@@ -51,17 +60,22 @@ export async function onRequestPost(context) {
 
     if (!putRes.ok) {
       const errorText = await putRes.text();
-      return new Response(errorText, { status: 500 });
+      return new Response("Cannot upload image: " + errorText, {
+        status: 500
+      });
     }
 
     return new Response(JSON.stringify({
       path: filePath
     }), {
       status: 200,
-      headers: { "Content-Type": "application/json" }
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
-
   } catch (error) {
-    return new Response("Server error", { status: 500 });
+    return new Response("Server error: " + error.message, {
+      status: 500
+    });
   }
 }

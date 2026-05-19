@@ -208,7 +208,8 @@
         });
 
         if (!res.ok) {
-          loginStatus.textContent = "Невірний пароль або не налаштована змінна ADMIN_PASSWORD.";
+          const errorText = await res.text();
+          loginStatus.textContent = "Помилка входу: " + errorText;
           return;
         }
 

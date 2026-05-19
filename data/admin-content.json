@@ -8,19 +8,23 @@
   "services": [
     {
       "title": "Предметні фото",
-      "text": "Естетична зйомка продуктів для брендів, сайтів, каталогів та соцмереж."
+      "text": "Естетична зйомка продуктів для брендів, сайтів, каталогів та соцмереж.",
+      "category": "product"
     },
     {
       "title": "Фото на сайт",
-      "text": "Візуал для сайтів, Amazon, маркетплейсів, презентацій та сторінок бренду."
+      "text": "Візуал для сайтів, Amazon, маркетплейсів, презентацій та сторінок бренду.",
+      "category": "product"
     },
     {
       "title": "Відео контент",
-      "text": "Короткі ролики, TikTok/Reels формат, презентації продукту та експертні відео."
+      "text": "Короткі ролики, TikTok/Reels формат, презентації продукту та експертні відео.",
+      "category": "video"
     },
     {
       "title": "Співпраця",
-      "text": "Колаборації, рекламний контент, комплексна зйомка та робота з beauty-брендами."
+      "text": "Колаборації, рекламний контент, комплексна зйомка та робота з beauty-брендами.",
+      "category": "contact"
     }
   ],
   "portfolio": [
@@ -38,56 +42,14 @@
     },
     {
       "title": "Робота 3",
-      "category": "product",
-      "image": "assets/images/portfolio/work3.jpg",
-      "size": ""
-    },
-    {
-      "title": "Робота 5",
-      "category": "product",
-      "image": "assets/images/portfolio/work5.jpg",
-      "size": ""
-    },
-    {
-      "title": "Робота 6",
-      "category": "product",
-      "image": "assets/images/portfolio/work6.webp",
-      "size": ""
-    },
-    {
-      "title": "Робота 7",
-      "category": "product",
-      "image": "assets/images/portfolio/work7.webp",
-      "size": ""
-    },
-    {
-      "title": "Робота 8",
-      "category": "product",
-      "image": "assets/images/portfolio/work8.jpg",
-      "size": ""
-    },
-    {
-      "title": "Робота 9",
-      "category": "product",
-      "image": "assets/images/portfolio/work9.webp",
-      "size": ""
-    },
-    {
-      "title": "Робота 10",
-      "category": "product",
-      "image": "assets/images/portfolio/work10.webp",
-      "size": ""
-    },
-    {
-      "title": "Робота 11",
-      "category": "product",
-      "image": "assets/images/portfolio/work11.jpg",
-      "size": ""
-    },
-    {
-      "title": "Робота 12",
       "category": "macro",
-      "image": "assets/images/portfolio/work12.jpg",
+      "image": "assets/images/portfolio/work3.jpg",
+      "size": "wide"
+    },
+    {
+      "title": "Робота 4",
+      "category": "hand",
+      "image": "assets/images/portfolio/work4.jpg",
       "size": ""
     }
   ],
@@ -101,26 +63,4 @@
       "answer": "Ціна залежить від кількості матеріалів, складності зйомки, реквізиту та термінів."
     }
   ]
-  "services": [
-  {
-    "title": "Предметні фото",
-    "text": "Естетична зйомка продуктів для брендів, сайтів, каталогів та соцмереж.",
-    "category": "product"
-  },
-  {
-    "title": "Фото на сайт",
-    "text": "Візуал для сайтів, Amazon, маркетплейсів, презентацій та сторінок бренду.",
-    "category": "product"
-  },
-  {
-    "title": "Відео контент",
-    "text": "Короткі ролики, TikTok/Reels формат, презентації продукту та експертні відео.",
-    "category": "video"
-  },
-  {
-    "title": "Співпраця",
-    "text": "Колаборації, рекламний контент, комплексна зйомка та робота з beauty-брендами.",
-    "category": "contact"
-  }
-]
 }

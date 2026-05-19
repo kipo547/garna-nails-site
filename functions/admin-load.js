@@ -1,8 +1,15 @@
 export async function onRequestPost(context) {
-  const password = context.request.headers.get("x-admin-password");
+  const password = String(context.request.headers.get("x-admin-password") || "").trim();
+  const realPassword = String(context.env.ADMIN_PASSWORD || "").trim();
 
-  if (password !== context.env.ADMIN_PASSWORD) {
-    return new Response("Unauthorized: wrong admin password", {
+  if (!realPassword) {
+    return new Response("ADMIN_PASSWORD is missing in Cloudflare variables", {
+      status: 500,
+    });
+  }
+
+  if (password !== realPassword) {
+    return new Response("Wrong password", {
       status: 401,
     });
   }

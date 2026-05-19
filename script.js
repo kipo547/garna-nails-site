@@ -394,6 +394,39 @@ requestForm.addEventListener("submit", async (event) => {
       targetButton.click();
     }
   }, 500);
+    function makeServicesClickable() {
+  const serviceCards = document.querySelectorAll(".service-card");
+
+  const defaultCategories = ["product", "product", "video", "contact"];
+
+  serviceCards.forEach((card, index) => {
+    card.style.cursor = "pointer";
+
+    card.onclick = () => {
+      const category = defaultCategories[index] || "all";
+
+      if (category === "contact") {
+        document.getElementById("contact")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+        return;
+      }
+
+      document.getElementById("works")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+      setTimeout(() => {
+        const btn = document.querySelector(`.filter-buttons button[data-filter="${category}"]`);
+        if (btn) btn.click();
+      }, 500);
+    };
+  });
+}
+
+setTimeout(makeServicesClickable, 1000);
 }
 });
 

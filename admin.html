@@ -36,6 +36,11 @@
       padding-top: 24px;
     }
 
+    label {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
     input, textarea, select {
       width: 100%;
       box-sizing: border-box;
@@ -91,6 +96,14 @@
       margin-top: 14px;
     }
 
+    .preview {
+      max-width: 180px;
+      border-radius: 16px;
+      margin: 10px 0 18px;
+      display: block;
+      border: 1px solid #f0d6df;
+    }
+
     .topbar {
       display: flex;
       gap: 10px;
@@ -98,7 +111,7 @@
       margin-top: 20px;
       position: sticky;
       bottom: 16px;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.92);
       padding: 14px;
       border: 1px solid #f0d6df;
       border-radius: 20px;
@@ -110,15 +123,16 @@
     }
   </style>
 </head>
-<body>
 
+<body>
   <div class="admin">
     <h1>Адмінка garna_nails</h1>
     <p class="hint">Тут можна змінювати сайт без коду. Після збереження сайт оновиться через 30–60 секунд.</p>
 
     <div id="login">
       <input type="password" id="password" placeholder="Пароль від адмінки">
-      <button onclick="login()">Увійти</button>
+      <button id="loginBtn">Увійти</button>
+      <p class="status" id="loginStatus"></p>
     </div>
 
     <div id="editor">
@@ -144,22 +158,21 @@
 
       <h2>Послуги</h2>
       <div id="services"></div>
-      <button class="small-btn" onclick="addService()">+ Додати послугу</button>
+      <button class="small-btn" id="addServiceBtn">+ Додати послугу</button>
 
       <h2>Портфоліо</h2>
       <p class="hint">
-        Фото потрібно спочатку додати в GitHub у папку <b>assets/images/portfolio</b>, а тут вказати шлях,
-        наприклад: <b>assets/images/portfolio/work1.jpg</b>
+        Можна завантажити фото з комп’ютера. Після завантаження натисни <b>Зберегти зміни</b>.
       </p>
       <div id="portfolio"></div>
-      <button class="small-btn" onclick="addPortfolio()">+ Додати роботу</button>
+      <button class="small-btn" id="addPortfolioBtn">+ Додати роботу</button>
 
       <h2>Питання / FAQ</h2>
       <div id="faq"></div>
-      <button class="small-btn" onclick="addFaq()">+ Додати питання</button>
+      <button class="small-btn" id="addFaqBtn">+ Додати питання</button>
 
       <div class="topbar">
-        <button onclick="saveContent()">Зберегти зміни</button>
+        <button id="saveBtn">Зберегти зміни</button>
         <button class="small-btn" onclick="location.href='/'">Відкрити сайт</button>
         <p class="status" id="status"></p>
       </div>
@@ -170,28 +183,45 @@
     let data = {};
     let adminPassword = "";
 
+    const loginBox = document.getElementById("login");
+    const editorBox = document.getElementById("editor");
+    const statusBox = document.getElementById("status");
+    const loginStatus = document.getElementById("loginStatus");
+
+    document.getElementById("loginBtn").addEventListener("click", login);
+    document.getElementById("addServiceBtn").addEventListener("click", addService);
+    document.getElementById("addPortfolioBtn").addEventListener("click", addPortfolio);
+    document.getElementById("addFaqBtn").addEventListener("click", addFaq);
+    document.getElementById("saveBtn").addEventListener("click", saveContent);
+
     async function login() {
-      adminPassword = document.getElementById("password").value;
+      adminPassword = document.getElementById("password").value.trim();
+      loginStatus.textContent = "Перевіряємо пароль...";
 
-      const res = await fetch("/admin-load", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-password": adminPassword
+      try {
+        const res = await fetch("/admin-load", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-password": adminPassword
+          }
+        });
+
+        if (!res.ok) {
+          loginStatus.textContent = "Невірний пароль або не налаштована змінна ADMIN_PASSWORD.";
+          return;
         }
-      });
 
-      if (!res.ok) {
-        alert("Невірний пароль або не налаштована змінна ADMIN_PASSWORD");
-        return;
+        data = await res.json();
+
+        loginBox.style.display = "none";
+        editorBox.style.display = "block";
+        loginStatus.textContent = "";
+
+        render();
+      } catch (error) {
+        loginStatus.textContent = "Помилка завантаження адмінки.";
       }
-
-      data = await res.json();
-
-      document.getElementById("login").style.display = "none";
-      document.getElementById("editor").style.display = "block";
-
-      render();
     }
 
     function render() {
@@ -223,42 +253,67 @@
       data.services = data.services || [];
 
       data.services.forEach((item, index) => {
-        box.innerHTML += `
-          <div class="card">
-            <label>Назва послуги</label>
-            <input value="${escapeHtml(item.title || "")}" onchange="data.services[${index}].title = this.value">
+        const card = document.createElement("div");
+        card.className = "card";
 
-            <label>Опис</label>
-            <textarea onchange="data.services[${index}].text = this.value">${escapeHtml(item.text || "")}</textarea>
+        card.innerHTML = `
+          <label>Назва послуги</label>
+          <input data-service-title="${index}" value="${escapeHtml(item.title || "")}">
 
-            <label>Куди веде при кліку</label>
-            <select onchange="data.services[${index}].category = this.value">
-            <option value="product" ${item.category === "product" ? "selected" : ""}>Предметні фото</option>
-            <option value="hand" ${item.category === "hand" ? "selected" : ""}>Фото на руці</option>
-            <option value="macro" ${item.category === "macro" ? "selected" : ""}>Макро текстури</option>
-            <option value="video" ${item.category === "video" ? "selected" : ""}>Відео контент</option>
-            <option value="all" ${item.category === "all" ? "selected" : ""}>Усі роботи</option>
-            <option value="contact" ${item.category === "contact" ? "selected" : ""}>Контакти / заявка</option>
-</select>
+          <label>Опис</label>
+          <textarea data-service-text="${index}">${escapeHtml(item.text || "")}</textarea>
 
-<button class="danger" onclick="removeService(${index})">Видалити</button>
-          </div>
+          <label>Куди веде при кліку</label>
+          <select data-service-category="${index}">
+            <option value="product">Предметні фото</option>
+            <option value="hand">Фото на руці</option>
+            <option value="macro">Макро текстури</option>
+            <option value="video">Відео контент</option>
+            <option value="all">Усі роботи</option>
+            <option value="contact">Контакти / заявка</option>
+          </select>
+
+          <button class="danger" data-remove-service="${index}">Видалити</button>
         `;
+
+        box.appendChild(card);
+
+        card.querySelector(`[data-service-category="${index}"]`).value = item.category || "product";
+      });
+
+      box.querySelectorAll("[data-service-title]").forEach(input => {
+        input.addEventListener("input", () => {
+          data.services[input.dataset.serviceTitle].title = input.value;
+        });
+      });
+
+      box.querySelectorAll("[data-service-text]").forEach(textarea => {
+        textarea.addEventListener("input", () => {
+          data.services[textarea.dataset.serviceText].text = textarea.value;
+        });
+      });
+
+      box.querySelectorAll("[data-service-category]").forEach(select => {
+        select.addEventListener("change", () => {
+          data.services[select.dataset.serviceCategory].category = select.value;
+        });
+      });
+
+      box.querySelectorAll("[data-remove-service]").forEach(button => {
+        button.addEventListener("click", () => {
+          data.services.splice(button.dataset.removeService, 1);
+          renderServices();
+        });
       });
     }
 
     function addService() {
-  data.services.push({
-    title: "Нова послуга",
-    text: "Опис послуги",
-    category: "product"
-  });
-
-  renderServices();
-}
-
-    function removeService(index) {
-      data.services.splice(index, 1);
+      data.services = data.services || [];
+      data.services.push({
+        title: "Нова послуга",
+        text: "Опис послуги",
+        category: "product"
+      });
       renderServices();
     }
 
@@ -269,51 +324,90 @@
       data.portfolio = data.portfolio || [];
 
       data.portfolio.forEach((item, index) => {
-        box.innerHTML += `
-          <div class="card">
-            <label>Назва роботи</label>
-            <input value="${escapeHtml(item.title || "")}" onchange="data.portfolio[${index}].title = this.value">
+        const card = document.createElement("div");
+        card.className = "card";
 
-            <label>Категорія</label>
-            <select onchange="data.portfolio[${index}].category = this.value">
-              <option value="product" ${item.category === "product" ? "selected" : ""}>Предметні фото</option>
-              <option value="hand" ${item.category === "hand" ? "selected" : ""}>Фото на руці</option>
-              <option value="macro" ${item.category === "macro" ? "selected" : ""}>Макро текстури</option>
-              <option value="video" ${item.category === "video" ? "selected" : ""}>Відео контент</option>
-            </select>
+        card.innerHTML = `
+          <label>Назва роботи</label>
+          <input data-work-title="${index}" value="${escapeHtml(item.title || "")}">
 
-            <label>Фото</label>
-            <input value="${escapeHtml(item.image || "")}" onchange="data.portfolio[${index}].image = this.value">
+          <label>Категорія</label>
+          <select data-work-category="${index}">
+            <option value="product">Предметні фото</option>
+            <option value="hand">Фото на руці</option>
+            <option value="macro">Макро текстури</option>
+            <option value="video">Відео контент</option>
+          </select>
 
-            <input type="file" accept="image/*" onchange="uploadImage(event, ${index})">
+          <label>Фото</label>
+          <input data-work-image="${index}" value="${escapeHtml(item.image || "")}">
 
-            ${item.image ? `<img src="/${item.image}" style="max-width:180px;border-radius:16px;margin:10px 0;display:block;">` : ""}
+          <input type="file" accept="image/*" data-upload-image="${index}">
 
-            <label>Розмір блоку</label>
-            <select onchange="data.portfolio[${index}].size = this.value">
-              <option value="" ${!item.size ? "selected" : ""}>Звичайний</option>
-              <option value="tall" ${item.size === "tall" ? "selected" : ""}>Високий</option>
-              <option value="wide" ${item.size === "wide" ? "selected" : ""}>Широкий</option>
-            </select>
+          ${item.image ? `<img class="preview" src="/${item.image}" alt="">` : ""}
 
-            <button class="danger" onclick="removePortfolio(${index})">Видалити</button>
-          </div>
+          <label>Розмір блоку</label>
+          <select data-work-size="${index}">
+            <option value="">Звичайний</option>
+            <option value="tall">Високий</option>
+            <option value="wide">Широкий</option>
+          </select>
+
+          <button class="danger" data-remove-work="${index}">Видалити</button>
         `;
+
+        box.appendChild(card);
+
+        card.querySelector(`[data-work-category="${index}"]`).value = item.category || "product";
+        card.querySelector(`[data-work-size="${index}"]`).value = item.size || "";
+      });
+
+      box.querySelectorAll("[data-work-title]").forEach(input => {
+        input.addEventListener("input", () => {
+          data.portfolio[input.dataset.workTitle].title = input.value;
+        });
+      });
+
+      box.querySelectorAll("[data-work-category]").forEach(select => {
+        select.addEventListener("change", () => {
+          data.portfolio[select.dataset.workCategory].category = select.value;
+        });
+      });
+
+      box.querySelectorAll("[data-work-image]").forEach(input => {
+        input.addEventListener("input", () => {
+          data.portfolio[input.dataset.workImage].image = input.value;
+        });
+      });
+
+      box.querySelectorAll("[data-work-size]").forEach(select => {
+        select.addEventListener("change", () => {
+          data.portfolio[select.dataset.workSize].size = select.value;
+        });
+      });
+
+      box.querySelectorAll("[data-upload-image]").forEach(input => {
+        input.addEventListener("change", event => {
+          uploadImage(event, Number(input.dataset.uploadImage));
+        });
+      });
+
+      box.querySelectorAll("[data-remove-work]").forEach(button => {
+        button.addEventListener("click", () => {
+          data.portfolio.splice(button.dataset.removeWork, 1);
+          renderPortfolio();
+        });
       });
     }
 
     function addPortfolio() {
+      data.portfolio = data.portfolio || [];
       data.portfolio.push({
         title: "Нова робота",
         category: "product",
-        image: "assets/images/portfolio/work-new.jpg",
+        image: "",
         size: ""
       });
-      renderPortfolio();
-    }
-
-    function removePortfolio(index) {
-      data.portfolio.splice(index, 1);
       renderPortfolio();
     }
 
@@ -324,80 +418,108 @@
       data.faq = data.faq || [];
 
       data.faq.forEach((item, index) => {
-        box.innerHTML += `
-          <div class="card">
-            <label>Питання</label>
-            <input value="${escapeHtml(item.question || "")}" onchange="data.faq[${index}].question = this.value">
+        const card = document.createElement("div");
+        card.className = "card";
 
-            <label>Відповідь</label>
-            <textarea onchange="data.faq[${index}].answer = this.value">${escapeHtml(item.answer || "")}</textarea>
+        card.innerHTML = `
+          <label>Питання</label>
+          <input data-faq-question="${index}" value="${escapeHtml(item.question || "")}">
 
-            <button class="danger" onclick="removeFaq(${index})">Видалити</button>
-          </div>
+          <label>Відповідь</label>
+          <textarea data-faq-answer="${index}">${escapeHtml(item.answer || "")}</textarea>
+
+          <button class="danger" data-remove-faq="${index}">Видалити</button>
         `;
+
+        box.appendChild(card);
+      });
+
+      box.querySelectorAll("[data-faq-question]").forEach(input => {
+        input.addEventListener("input", () => {
+          data.faq[input.dataset.faqQuestion].question = input.value;
+        });
+      });
+
+      box.querySelectorAll("[data-faq-answer]").forEach(textarea => {
+        textarea.addEventListener("input", () => {
+          data.faq[textarea.dataset.faqAnswer].answer = textarea.value;
+        });
+      });
+
+      box.querySelectorAll("[data-remove-faq]").forEach(button => {
+        button.addEventListener("click", () => {
+          data.faq.splice(button.dataset.removeFaq, 1);
+          renderFaq();
+        });
       });
     }
 
     function addFaq() {
-      data.faq.push({ question: "Нове питання", answer: "Відповідь" });
+      data.faq = data.faq || [];
+      data.faq.push({
+        question: "Нове питання",
+        answer: "Відповідь"
+      });
       renderFaq();
     }
 
-    function removeFaq(index) {
-      data.faq.splice(index, 1);
-      renderFaq();
-    }
     async function uploadImage(event, index) {
-  const file = event.target.files[0];
+      const file = event.target.files[0];
+      if (!file) return;
 
-  if (!file) return;
+      statusBox.textContent = "Завантажуємо фото...";
 
-  const status = document.getElementById("status");
-  status.textContent = "Завантажуємо фото...";
+      const formData = new FormData();
+      formData.append("file", file);
 
-  const formData = new FormData();
-  formData.append("file", file);
+      try {
+        const res = await fetch("/admin-upload", {
+          method: "POST",
+          headers: {
+            "x-admin-password": adminPassword
+          },
+          body: formData
+        });
 
-  const res = await fetch("/admin-upload", {
-    method: "POST",
-    headers: {
-      "x-admin-password": adminPassword
-    },
-    body: formData
-  });
+        if (!res.ok) {
+          statusBox.textContent = "Помилка завантаження фото. Перевір GITHUB_TOKEN.";
+          return;
+        }
 
-  if (!res.ok) {
-    status.textContent = "Помилка завантаження фото.";
-    return;
-  }
+        const result = await res.json();
 
-  const result = await res.json();
+        data.portfolio[index].image = result.path;
 
-  data.portfolio[index].image = result.path;
-
-  status.textContent = "Фото завантажено. Натисни «Зберегти зміни».";
-  renderPortfolio();
-}
+        statusBox.textContent = "Фото завантажено. Натисни «Зберегти зміни».";
+        renderPortfolio();
+      } catch (error) {
+        statusBox.textContent = "Помилка завантаження фото.";
+      }
+    }
 
     async function saveContent() {
       collectBase();
 
-      const status = document.getElementById("status");
-      status.textContent = "Зберігаємо...";
+      statusBox.textContent = "Зберігаємо...";
 
-      const res = await fetch("/admin-save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-password": adminPassword
-        },
-        body: JSON.stringify(data)
-      });
+      try {
+        const res = await fetch("/admin-save", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-password": adminPassword
+          },
+          body: JSON.stringify(data)
+        });
 
-      if (res.ok) {
-        status.textContent = "Збережено. Сайт оновиться через 30–60 секунд.";
-      } else {
-        status.textContent = "Помилка збереження. Перевір GITHUB_TOKEN.";
+        if (res.ok) {
+          statusBox.textContent = "Збережено. Сайт оновиться через 30–60 секунд.";
+        } else {
+          const errorText = await res.text();
+          statusBox.textContent = "Помилка збереження: " + errorText;
+        }
+      } catch (error) {
+        statusBox.textContent = "Помилка збереження.";
       }
     }
 
@@ -409,6 +531,5 @@
         .replaceAll('"', "&quot;");
     }
   </script>
-
 </body>
 </html>

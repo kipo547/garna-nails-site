@@ -248,9 +248,14 @@
     }
 
     function addService() {
-      data.services.push({ title: "Нова послуга", text: "Опис послуги" });
-      renderServices();
-    }
+  data.services.push({
+    title: "Нова послуга",
+    text: "Опис послуги",
+    category: "product"
+  });
+
+  renderServices();
+}
 
     function removeService(index) {
       data.services.splice(index, 1);

@@ -436,6 +436,59 @@ requestForm.addEventListener("submit", async (event) => {
       button.click();
     }
   }, 500);
+    function fixPortfolioVideos() {
+  const workItems = document.querySelectorAll(".work-item");
+
+  workItems.forEach((item) => {
+    const img = item.querySelector("img");
+    if (!img) return;
+
+    const src = img.getAttribute("src") || "";
+    const cleanSrc = src.split("?")[0].toLowerCase();
+
+    const isVideoFile = cleanSrc.endsWith(".mp4") || cleanSrc.endsWith(".webm");
+    const isYoutube = src.includes("youtube.com") || src.includes("youtu.be");
+
+    if (!isVideoFile && !isYoutube) return;
+
+    if (isYoutube) {
+      let videoUrl = src;
+
+      if (src.includes("watch?v=")) {
+        videoUrl = src.replace("watch?v=", "embed/");
+      }
+
+      if (src.includes("youtu.be/")) {
+        const id = src.split("youtu.be/")[1].split("?")[0];
+        videoUrl = `https://www.youtube.com/embed/${id}`;
+      }
+
+      item.innerHTML = `
+        <iframe 
+          src="${videoUrl}" 
+          title="Video"
+          frameborder="0"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      `;
+    } else {
+      item.innerHTML = `
+        <video 
+          src="${src}" 
+          controls 
+          muted 
+          playsinline>
+        </video>
+      `;
+    }
+  });
+}
+
+fixPortfolioVideos();
+setTimeout(fixPortfolioVideos, 500);
+setTimeout(fixPortfolioVideos, 1500);
+setTimeout(fixPortfolioVideos, 3000);
 });
 
 });

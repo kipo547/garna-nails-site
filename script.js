@@ -17,17 +17,26 @@ async function loadAdminContent() {
     serviceCards[index].querySelector("p").textContent = service.text;
 
     const categories = ["product", "product", "video", "all"];
-    const category = service.category || categories[index] || "all";
+const category = service.category || categories[index] || "all";
 
-    serviceCards[index].style.cursor = "pointer";
+serviceCards[index].style.cursor = "pointer";
 
-    serviceCards[index].onclick = () => {
-      if (category === "all") {
-        openPortfolioCategory("all");
-      } else {
-        openPortfolioCategory(category);
-      }
-    };
+serviceCards[index].onclick = () => {
+  if (category === "contact") {
+    const contactSection = document.getElementById("contact");
+
+    if (contactSection) {
+      contactSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    return;
+  }
+
+  openPortfolioCategory(category);
+};
   }
 });
 

@@ -162,10 +162,17 @@
 
       <h2>Портфоліо</h2>
       <p class="hint">
-        Можна завантажити фото з комп’ютера. Після завантаження натисни <b>Зберегти зміни</b>.
+        Тут тільки фото. Відео додаються нижче в окремому розділі “Відео контент”.
       </p>
       <div id="portfolio"></div>
       <button class="small-btn" id="addPortfolioBtn">+ Додати роботу</button>
+
+      <h2>Відео контент</h2>
+      <p class="hint">
+        Тут можна додавати різні види відео. Сам файл відео на сайт не завантажуємо — тільки вставляємо посилання на YouTube, TikTok, Instagram або Google Drive.
+      </p>
+      <div id="videos"></div>
+      <button class="small-btn" id="addVideoBtn">+ Додати відео</button>
 
       <h2>Питання / FAQ</h2>
       <div id="faq"></div>
@@ -183,6 +190,57 @@
     let data = {};
     let adminPassword = "";
 
+    const defaultVideos = [
+      {
+        type: "Викраска",
+        title: "Викраска на один нігтик",
+        description: "Коротке відео з демонстрацією кольору, текстури та блиску продукту на одному нігті.",
+        link: ""
+      },
+      {
+        type: "Викраска",
+        title: "Викраска на всій руці",
+        description: "Повна демонстрація продукту на всій руці, щоб показати вигляд відтінку в реальному манікюрі.",
+        link: ""
+      },
+      {
+        type: "МК",
+        title: "МК на всій руці",
+        description: "Майстер-клас або покрокове відео з нанесенням продукту на всій руці.",
+        link: ""
+      },
+      {
+        type: "Експертний контент",
+        title: "Експертний контент манікюр/педикюр",
+        description: "Відео з поясненнями, порадами, процесом роботи або експертною подачею для майстрів та клієнтів.",
+        link: ""
+      },
+      {
+        type: "TikTok/Reels",
+        title: "Tik tok формат",
+        description: "Динамічні короткі ролики для TikTok, Reels та Shorts з акцентом на візуал, тренди та швидке залучення уваги.",
+        link: "https://www.youtube.com/shorts/ZMdzlb5dkjQ"
+      },
+      {
+        type: "Лайфхаки",
+        title: "Короткі відео лайфхаки",
+        description: "Короткі корисні відео з порадами, фішками, техніками або цікавими прийомами у форматі для соцмереж.",
+        link: ""
+      },
+      {
+        type: "Огляд",
+        title: "Огляд продукції",
+        description: "Відеоогляд продукту: упаковка, текстура, використання, переваги та загальне враження.",
+        link: ""
+      },
+      {
+        type: "Реклама",
+        title: "Рекламний ролик продукції, презентація",
+        description: "Готовий рекламний ролик або презентаційне відео для продукту, бренду, сайту чи соціальних мереж.",
+        link: ""
+      }
+    ];
+
     const loginBox = document.getElementById("login");
     const editorBox = document.getElementById("editor");
     const statusBox = document.getElementById("status");
@@ -191,6 +249,7 @@
     document.getElementById("loginBtn").addEventListener("click", login);
     document.getElementById("addServiceBtn").addEventListener("click", addService);
     document.getElementById("addPortfolioBtn").addEventListener("click", addPortfolio);
+    document.getElementById("addVideoBtn").addEventListener("click", addVideo);
     document.getElementById("addFaqBtn").addEventListener("click", addFaq);
     document.getElementById("saveBtn").addEventListener("click", saveContent);
 
@@ -215,6 +274,11 @@
 
         data = await res.json();
 
+        data.services = data.services || [];
+        data.portfolio = data.portfolio || [];
+        data.videos = data.videos && data.videos.length ? data.videos : defaultVideos;
+        data.faq = data.faq || [];
+
         loginBox.style.display = "none";
         editorBox.style.display = "block";
         loginStatus.textContent = "";
@@ -235,6 +299,7 @@
 
       renderServices();
       renderPortfolio();
+      renderVideos();
       renderFaq();
     }
 
@@ -250,8 +315,6 @@
     function renderServices() {
       const box = document.getElementById("services");
       box.innerHTML = "";
-
-      data.services = data.services || [];
 
       data.services.forEach((item, index) => {
         const card = document.createElement("div");
@@ -309,20 +372,18 @@
     }
 
     function addService() {
-      data.services = data.services || [];
       data.services.push({
         title: "Нова послуга",
         text: "Опис послуги",
         category: "product"
       });
+
       renderServices();
     }
 
     function renderPortfolio() {
       const box = document.getElementById("portfolio");
       box.innerHTML = "";
-
-      data.portfolio = data.portfolio || [];
 
       data.portfolio.forEach((item, index) => {
         const card = document.createElement("div");
@@ -337,13 +398,12 @@
             <option value="product">Предметні фото</option>
             <option value="hand">Фото на руці</option>
             <option value="macro">Макро текстури</option>
-            <option value="video">Відео контент</option>
           </select>
 
           <label>Фото</label>
-          <input data-work-image="${index}" value="${escapeHtml(item.image || "")}">
+          <input data-work-image="${index}" value="${escapeHtml(item.image || "")}" placeholder="assets/images/portfolio/work1.jpg">
 
-          <input type="file" accept="image/*,video/mp4,video/webm" data-upload-image="${index}">
+          <input type="file" accept="image/*" data-upload-image="${index}">
 
           ${item.image ? `<img class="preview" src="/${item.image}" alt="">` : ""}
 
@@ -402,21 +462,89 @@
     }
 
     function addPortfolio() {
-      data.portfolio = data.portfolio || [];
       data.portfolio.push({
         title: "Нова робота",
         category: "product",
         image: "",
         size: ""
       });
+
       renderPortfolio();
+    }
+
+    function renderVideos() {
+      const box = document.getElementById("videos");
+      box.innerHTML = "";
+
+      data.videos.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <label>Вид відео</label>
+          <input data-video-type="${index}" value="${escapeHtml(item.type || "")}" placeholder="Наприклад: TikTok/Reels">
+
+          <label>Назва</label>
+          <input data-video-title="${index}" value="${escapeHtml(item.title || "")}" placeholder="Наприклад: Презентація продукту">
+
+          <label>Опис</label>
+          <textarea data-video-description="${index}" placeholder="Коротко опиши, що входить у цей тип відео">${escapeHtml(item.description || "")}</textarea>
+
+          <label>Посилання на приклад</label>
+          <input data-video-link="${index}" value="${escapeHtml(item.link || "")}" placeholder="https://www.youtube.com/shorts/...">
+
+          <button class="danger" data-remove-video="${index}">Видалити</button>
+        `;
+
+        box.appendChild(card);
+      });
+
+      box.querySelectorAll("[data-video-type]").forEach(input => {
+        input.addEventListener("input", () => {
+          data.videos[input.dataset.videoType].type = input.value;
+        });
+      });
+
+      box.querySelectorAll("[data-video-title]").forEach(input => {
+        input.addEventListener("input", () => {
+          data.videos[input.dataset.videoTitle].title = input.value;
+        });
+      });
+
+      box.querySelectorAll("[data-video-description]").forEach(textarea => {
+        textarea.addEventListener("input", () => {
+          data.videos[textarea.dataset.videoDescription].description = textarea.value;
+        });
+      });
+
+      box.querySelectorAll("[data-video-link]").forEach(input => {
+        input.addEventListener("input", () => {
+          data.videos[input.dataset.videoLink].link = input.value;
+        });
+      });
+
+      box.querySelectorAll("[data-remove-video]").forEach(button => {
+        button.addEventListener("click", () => {
+          data.videos.splice(button.dataset.removeVideo, 1);
+          renderVideos();
+        });
+      });
+    }
+
+    function addVideo() {
+      data.videos.push({
+        type: "Новий формат",
+        title: "Нове відео",
+        description: "Опис відео контенту",
+        link: ""
+      });
+
+      renderVideos();
     }
 
     function renderFaq() {
       const box = document.getElementById("faq");
       box.innerHTML = "";
-
-      data.faq = data.faq || [];
 
       data.faq.forEach((item, index) => {
         const card = document.createElement("div");
@@ -456,11 +584,11 @@
     }
 
     function addFaq() {
-      data.faq = data.faq || [];
       data.faq.push({
         question: "Нове питання",
         answer: "Відповідь"
       });
+
       renderFaq();
     }
 

@@ -343,7 +343,7 @@
           <label>Фото</label>
           <input data-work-image="${index}" value="${escapeHtml(item.image || "")}">
 
-          <input type="file" accept="image/*" data-upload-image="${index}">
+          <input type="file" accept="image/*,video/mp4,video/webm" data-upload-image="${index}">
 
           ${item.image ? `<img class="preview" src="/${item.image}" alt="">` : ""}
 

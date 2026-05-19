@@ -57,6 +57,48 @@
       "category": "video",
       "image": "https://www.youtube.com/shorts/ZMdzlb5dkjQ",
       "size": ""
+    },
+    {
+      "title": "роботпаааа",
+      "category": "macro",
+      "image": "assets/images/portfolio/work5.jpg",
+      "size": ""
+    },
+    {
+      "title": "Нова робота6",
+      "category": "product",
+      "image": "assets/images/portfolio/work6.webp",
+      "size": ""
+    },
+    {
+      "title": "Нова робота7",
+      "category": "hand",
+      "image": "assets/images/portfolio/work7.webp",
+      "size": ""
+    },
+    {
+      "title": "Нова робота8",
+      "category": "macro",
+      "image": "assets/images/portfolio/work8.jpg",
+      "size": ""
+    },
+    {
+      "title": "Нова робота9",
+      "category": "hand",
+      "image": "assets/images/portfolio/work9.webp",
+      "size": ""
+    },
+    {
+      "title": "Нова робота",
+      "category": "macro",
+      "image": "assets/images/portfolio/work10.webp",
+      "size": ""
+    },
+    {
+      "title": "Нова робота",
+      "category": "macro",
+      "image": "assets/images/portfolio/work11.jpg",
+      "size": ""
     }
   ],
   "faq": [

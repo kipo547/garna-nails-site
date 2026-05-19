@@ -483,7 +483,8 @@
         });
 
         if (!res.ok) {
-          statusBox.textContent = "Помилка завантаження фото. Перевір GITHUB_TOKEN.";
+          const errorText = await res.text();
+          statusBox.textContent = "Помилка завантаження: " + errorText;
           return;
         }
 

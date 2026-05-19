@@ -825,3 +825,14 @@ img {
 .service-card:hover {
   border-color: var(--pink-dark);
 }
+.service-card {
+  cursor: pointer !important;
+}
+
+.service-card::after {
+  pointer-events: none;
+}
+
+.service-card:hover {
+  border-color: var(--pink-dark) !important;
+}

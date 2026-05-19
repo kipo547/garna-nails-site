@@ -818,3 +818,10 @@ img {
   opacity: 1;
   transform: translateY(0);
 }
+.service-card {
+  cursor: pointer;
+}
+
+.service-card:hover {
+  border-color: var(--pink-dark);
+}

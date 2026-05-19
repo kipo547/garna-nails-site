@@ -231,7 +231,17 @@
             <label>Опис</label>
             <textarea onchange="data.services[${index}].text = this.value">${escapeHtml(item.text || "")}</textarea>
 
-            <button class="danger" onclick="removeService(${index})">Видалити</button>
+            <label>Куди веде при кліку</label>
+            <select onchange="data.services[${index}].category = this.value">
+            <option value="product" ${item.category === "product" ? "selected" : ""}>Предметні фото</option>
+            <option value="hand" ${item.category === "hand" ? "selected" : ""}>Фото на руці</option>
+            <option value="macro" ${item.category === "macro" ? "selected" : ""}>Макро текстури</option>
+            <option value="video" ${item.category === "video" ? "selected" : ""}>Відео контент</option>
+            <option value="all" ${item.category === "all" ? "selected" : ""}>Усі роботи</option>
+            <option value="contact" ${item.category === "contact" ? "selected" : ""}>Контакти / заявка</option>
+</select>
+
+<button class="danger" onclick="removeService(${index})">Видалити</button>
           </div>
         `;
       });

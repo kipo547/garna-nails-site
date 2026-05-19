@@ -11,12 +11,25 @@ async function loadAdminContent() {
 
     const serviceCards = document.querySelectorAll(".service-card");
 
-    data.services.forEach((service, index) => {
-      if (serviceCards[index]) {
-        serviceCards[index].querySelector("h3").textContent = service.title;
-        serviceCards[index].querySelector("p").textContent = service.text;
+   data.services.forEach((service, index) => {
+  if (serviceCards[index]) {
+    serviceCards[index].querySelector("h3").textContent = service.title;
+    serviceCards[index].querySelector("p").textContent = service.text;
+
+    const categories = ["product", "product", "video", "all"];
+    const category = service.category || categories[index] || "all";
+
+    serviceCards[index].style.cursor = "pointer";
+
+    serviceCards[index].onclick = () => {
+      if (category === "all") {
+        openPortfolioCategory("all");
+      } else {
+        openPortfolioCategory(category);
       }
-    });
+    };
+  }
+});
 
     const portfolioGrid = document.querySelector(".portfolio-grid");
 
@@ -355,4 +368,23 @@ requestForm.addEventListener("submit", async (event) => {
   } catch (error) {
     formStatus.textContent = "Форма запрацює після завантаження сайту на Netlify.";
   }
+  function openPortfolioCategory(category) {
+  const worksSection = document.getElementById("works");
+
+  if (worksSection) {
+    worksSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  setTimeout(() => {
+    const targetButton = document.querySelector(`.filter-buttons button[data-filter="${category}"]`);
+
+    if (targetButton) {
+      targetButton.click();
+    }
+  }, 500);
+}
 });
+

@@ -396,38 +396,47 @@ requestForm.addEventListener("submit", async (event) => {
   }, 500);
    
 }
-  function makeServicesClickable() {
-  const serviceCards = document.querySelectorAll(".service-card");
+  document.addEventListener("click", function (event) {
+  const card = event.target.closest(".service-card");
 
-  const defaultCategories = ["product", "product", "video", "contact"];
+  if (!card) return;
 
-  serviceCards.forEach((card, index) => {
-    card.style.cursor = "pointer";
+  const cards = Array.from(document.querySelectorAll(".service-card"));
+  const index = cards.indexOf(card);
 
-    card.onclick = () => {
-      const category = defaultCategories[index] || "all";
+  const categories = ["product", "product", "video", "contact"];
+  const category = categories[index] || "all";
 
-      if (category === "contact") {
-        document.getElementById("contact")?.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-        return;
-      }
+  if (category === "contact") {
+    const contactSection = document.getElementById("contact");
 
-      document.getElementById("works")?.scrollIntoView({
+    if (contactSection) {
+      contactSection.scrollIntoView({
         behavior: "smooth",
         block: "start"
       });
+    }
 
-      setTimeout(() => {
-        const btn = document.querySelector(`.filter-buttons button[data-filter="${category}"]`);
-        if (btn) btn.click();
-      }, 500);
-    };
-  });
-}
+    return;
+  }
 
-setTimeout(makeServicesClickable, 1000);
+  const worksSection = document.getElementById("works");
+
+  if (worksSection) {
+    worksSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  setTimeout(() => {
+    const button = document.querySelector(`.filter-buttons button[data-filter="${category}"]`);
+
+    if (button) {
+      button.click();
+    }
+  }, 500);
+});
+
 });
 

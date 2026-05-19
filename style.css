@@ -836,3 +836,11 @@ img {
 .service-card:hover {
   border-color: var(--pink-dark) !important;
 }
+.service-card {
+  cursor: pointer !important;
+}
+
+.service-card:hover {
+  border-color: var(--pink-dark) !important;
+  transform: translateY(-4px);
+}

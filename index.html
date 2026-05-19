@@ -281,18 +281,59 @@
   </footer>
 
   <script src="script.js"></script>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
 <script>
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-      if (!user) {
-        window.netlifyIdentity.on("login", () => {
-          document.location.href = "/admin/";
+  function openServiceTarget(category) {
+    if (category === "contact") {
+      const contact = document.querySelector("#contact, .contact-section");
+
+      if (contact) {
+        contact.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
         });
       }
+
+      return;
+    }
+
+    const works = document.querySelector("#works");
+
+    if (works) {
+      works.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    setTimeout(() => {
+      const filterBtn = document.querySelector(`.filter-buttons button[data-filter="${category}"]`);
+
+      if (filterBtn) {
+        filterBtn.click();
+      }
+    }, 500);
+  }
+
+  function forceServiceCardsClickable() {
+    const cards = document.querySelectorAll(".service-card");
+
+    const targets = ["product", "product", "video", "contact"];
+
+    cards.forEach((card, index) => {
+      card.style.cursor = "pointer";
+
+      card.onclick = function () {
+        openServiceTarget(targets[index] || "all");
+      };
     });
   }
+
+  document.addEventListener("DOMContentLoaded", forceServiceCardsClickable);
+  window.addEventListener("load", forceServiceCardsClickable);
+
+  setTimeout(forceServiceCardsClickable, 500);
+  setTimeout(forceServiceCardsClickable, 1500);
+  setTimeout(forceServiceCardsClickable, 3000);
 </script>
 </body>
 </html>

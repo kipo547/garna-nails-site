@@ -14,7 +14,7 @@
     {
       "title": "Фото на сайт",
       "text": "Візуал для сайтів, Amazon, маркетплейсів, презентацій та сторінок бренду.",
-      "category": "product"
+      "category": "macro"
     },
     {
       "title": "Відео контент",
@@ -36,7 +36,7 @@
     },
     {
       "title": "Робота 2",
-      "category": "product",
+      "category": "macro",
       "image": "assets/images/portfolio/work2.jpg",
       "size": ""
     },
@@ -48,56 +48,68 @@
     },
     {
       "title": "Робота 4",
-      "category": "hand",
+      "category": "product",
       "image": "assets/images/portfolio/work4.jpg",
-      "size": ""
+      "size": "wide"
     },
     {
       "title": "vd 1",
-      "category": "video",
-      "image": "https://www.youtube.com/shorts/ZMdzlb5dkjQ",
-      "size": ""
+      "category": "product",
+      "image": "assets/images/uploads/1779259090513-img_7032.jpeg",
+      "size": "wide"
     },
     {
       "title": "роботпаааа",
-      "category": "macro",
+      "category": "product",
       "image": "assets/images/portfolio/work5.jpg",
-      "size": ""
+      "size": "wide"
     },
     {
       "title": "Нова робота6",
-      "category": "product",
+      "category": "hand",
       "image": "assets/images/portfolio/work6.webp",
-      "size": ""
+      "size": "wide"
     },
     {
       "title": "Нова робота7",
-      "category": "hand",
+      "category": "macro",
       "image": "assets/images/portfolio/work7.webp",
-      "size": ""
+      "size": "wide"
     },
     {
       "title": "Нова робота8",
       "category": "macro",
       "image": "assets/images/portfolio/work8.jpg",
-      "size": ""
+      "size": "wide"
     },
     {
       "title": "Нова робота9",
-      "category": "hand",
+      "category": "product",
       "image": "assets/images/portfolio/work9.webp",
-      "size": ""
+      "size": "wide"
     },
     {
       "title": "Нова робота",
-      "category": "macro",
+      "category": "product",
       "image": "assets/images/portfolio/work10.webp",
-      "size": ""
+      "size": "wide"
     },
     {
       "title": "Нова робота",
-      "category": "macro",
+      "category": "product",
       "image": "assets/images/portfolio/work11.jpg",
+      "size": "wide"
+    },
+    {
+      "title": "Нова робота",
+      "category": "product",
+      "image": "assets/images/uploads/1779259265414-img_5590.jpeg",
+      "size": "wide"
+    },
+    {
+      "title": "Нова робота",
+      "category": "hand",
+      "image": "assets/images/uploads/1779259367421-img_6142.jpeg",
       "size": ""
     }
   ],
@@ -109,6 +121,56 @@
     {
       "question": "Як формується ціна?",
       "answer": "Ціна залежить від кількості матеріалів, складності зйомки, реквізиту та термінів."
+    }
+  ],
+  "videos": [
+    {
+      "type": "Викраска",
+      "title": "Викраска на один нігтик",
+      "description": "Коротке відео з демонстрацією кольору, текстури та блиску продукту на одному нігті.",
+      "link": ""
+    },
+    {
+      "type": "Викраска",
+      "title": "Викраска на всій руці",
+      "description": "Повна демонстрація продукту на всій руці, щоб показати вигляд відтінку в реальному манікюрі.",
+      "link": ""
+    },
+    {
+      "type": "МК",
+      "title": "МК на всій руці",
+      "description": "Майстер-клас або покрокове відео з нанесенням продукту на всій руці.",
+      "link": ""
+    },
+    {
+      "type": "Експертний контент",
+      "title": "Експертний контент манікюр/педикюр",
+      "description": "Відео з поясненнями, порадами, процесом роботи або експертною подачею для майстрів та клієнтів.",
+      "link": ""
+    },
+    {
+      "type": "TikTok/Reels",
+      "title": "Tik tok формат",
+      "description": "Динамічні короткі ролики для TikTok, Reels та Shorts з акцентом на візуал, тренди та швидке залучення уваги.",
+      "link": "https://www.youtube.com/shorts/ZMdzlb5dkjQ"
+    },
+    {
+      "type": "Лайфхаки",
+      "title": "Короткі відео лайфхаки",
+      "description": "Короткі корисні відео з порадами, фішками, техніками або цікавими прийомами у форматі для соцмереж.",
+      "link": ""
+    },
+    {
+      "type": "Огляд",
+      "title": "Огляд продукції",
+      "description": "Відеоогляд продукту: упаковка, текстура, використання, переваги та загальне враження.",
+      "link": ""
+    },
+    {
+      "type": "Реклама",
+      "title": "Рекламний ролик продукції, презентація",
+      "description": "Готовий рекламний ролик або презентаційне відео для продукту, бренду, сайту чи соціальних мереж.",
+      "link": ""
     }
   ]
 }
